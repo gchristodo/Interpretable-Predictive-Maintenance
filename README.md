@@ -4,8 +4,8 @@ The main scope of this thesis is to tackle the interpretability problem of time-
 
 # Instructions
 Within this directory, you can find the "requirements.txt" file. 
-# using pip
+## using pip
 pip install -r requirements.txt
 
-# using Conda
+## using Conda
 conda create --name <env_name> --file requirements.txt
