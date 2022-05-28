@@ -8,3 +8,6 @@ Within this directory, you can find the "requirements.txt" file to set up your e
 pip install -r requirements.txt
 ### using Conda
 conda create --name <env_name> --file requirements.txt
+
+## Setting up the wrapper
+docker build -t visioreddemo .
