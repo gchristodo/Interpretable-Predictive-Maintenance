@@ -3,6 +3,7 @@ from myModel import Model
 from myExplainer import myLime
 from myInterpretor import myPCA, myAVG, myKPCA
 from myMetrics import Robustness, NZW, Faithfulness
+from mySettings import settings
 import pickle
 import pywhatkit
 from datetime import datetime
@@ -11,34 +12,6 @@ now = datetime.now()
 
 current_time = now.strftime("%H:%M:%S")
 print("Experiment initiated at {}".format(current_time))
-
-settings = {
-    "model": {
-        "json_path": "D1_cNN.json", #D1_cNN.json
-        "h5_path": "D1_cNN.hdf5" #D1_cNN.hdf5
-        },
-    "process": {
-        "dataset": {
-            "scaler": {
-                "type": "MinMaxScaler",
-                "feature_range": [0.1, 1]
-                },
-            "window": 50
-            }
-        },
-    "explainer":{
-            "name": "integrated_gradients", # or "integrated_gradients"
-            "mode": "regression", # this setting doesnt exist if IG
-            "discretize_continuous": False, # this setting doesnt exist if IG
-        },
-    "create_weights_for": "X_test", # Here you insert either X_train or X_test
-    }
-
-
-change_vector_values = {
-                        "index": 0, # integer between 0 and 700 or 'random'
-                        "by": 0.1
-                        }
 
 # HERE you change the save path for ALL pickles
 model_folder = settings["model"]["json_path"].split(".")[0]
@@ -261,19 +234,20 @@ print("PCA: ", final_results['Faithfulness']['max']['PCA'])
 print("********************************")
 
 # send message to whatsapp with the results
-now = datetime.now()
+if settings['phone_number']:
+    now = datetime.now()
 
-current_time = now.strftime("%H:%M:%S")
-print("Current Time =", current_time)
-current_time_split = current_time.split(":")
-hour = int(current_time_split[0])
-minutes = int(current_time_split[1])
-seconds = int(current_time_split[2])
-if int(minutes) >= 58:
-    hour += 1
-    minutes = 0
-elif seconds >= 0 and seconds <=50:
-    minutes += 1
-else:
-    minutes += 2
-pywhatkit.sendwhatmsg("+306937236974", str(final_results), hour, minutes, 15)
+    current_time = now.strftime("%H:%M:%S")
+    print("Current Time =", current_time)
+    current_time_split = current_time.split(":")
+    hour = int(current_time_split[0])
+    minutes = int(current_time_split[1])
+    seconds = int(current_time_split[2])
+    if int(minutes) >= 58:
+        hour += 1
+        minutes = 0
+    elif seconds >= 0 and seconds <=50:
+        minutes += 1
+    else:
+        minutes += 2
+    pywhatkit.sendwhatmsg(settings['phone_number'], str(final_results), hour, minutes, 15)
